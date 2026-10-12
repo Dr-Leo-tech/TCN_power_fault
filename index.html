@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="en">
+ 
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>TCN Grid Fault Monitor</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="assets/vendor/bootstrap/css/bootstrap.min.css">
+    <link href="assets/vendor/fonts/circular-std/style.css" rel="stylesheet">
+    <link rel="stylesheet" href="assets/libs/css/style.css">
+    <link rel="stylesheet" href="assets/vendor/fonts/fontawesome/css/fontawesome-all.css">
+    <style>
+        #status { padding: 6px 14px; border-radius: 3px; font-weight: 600; color: #fff; background: #2f7d5b; }
+        #status.cascade { background: #c23b2e; }
+        .band-transient { color: #6b7785; } .band-short { color: #2f7d5b; }
+        .band-sustained { color: #c98a12; font-weight: 600; } .band-persistent { color: #c23b2e; font-weight: 600; }
+        #gridMap { max-height: 380px; }
+        .navbar-brand { font-size: 22px; }
+        @media (max-width: 768px) {
+            .nav-left-sidebar .navbar-nav { flex-direction: row !important; flex-wrap: wrap; }
+            .nav-left-sidebar .nav-divider { display: none; }
+            .nav-left-sidebar .navbar a { font-size: 14px; padding: 8px 12px; }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- ============================================================== -->
+    <!-- main wrapper -->
+    <!-- ============================================================== -->
+    <div class="dashboard-main-wrapper">
+         <!-- ============================================================== -->
+        <!-- navbar -->
+        <!-- ============================================================== -->
+         <div class="dashboard-header">
+            <nav class="navbar navbar-expand-lg bg-white fixed-top">
+                <a class="navbar-brand" href="index.html">TCN Monitor</a>
+                <div class="ml-auto pr-3"><div id="status">Grid normal</div></div>
+            </nav>
+        </div>
+        <!-- ============================================================== -->
+        <!-- end navbar -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- left sidebar -->
+        <!-- ============================================================== -->
+      <div class="nav-left-sidebar sidebar-dark">
+            <div class="menu-list">
+                <nav class="navbar navbar-light">
+                    <div class="w-100">
+                        <ul class="navbar-nav flex-column">
+                            <li class="nav-divider">Grid</li>
+                            <li class="nav-item"><a class="nav-link active" href="#gridMap"><i class="fas fa-fw fa-project-diagram"></i>Grid map</a></li>
+                            <li class="nav-item"><a class="nav-link" href="#sendOne"><i class="fas fa-fw fa-bolt"></i>Send test fault</a></li>
+                            <li class="nav-item"><a class="nav-link" href="#rows"><i class="fas fa-fw fa-table"></i>Fault log</a></li>
+                        </ul>
+                    </div>
+                </nav>
+            </div>
+        </div>
+        <!-- ============================================================== -->
+        <!-- end left sidebar -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- wrapper  -->
+        <!-- ============================================================== -->
+        <div class="dashboard-wrapper">
+            <div class="container-fluid dashboard-content">
+                <div class="row">
+                    <div class="col-xl-8 col-lg-12 col-md-12 col-12">
+                        <div class="card">
+                            <h5 class="card-header">Grid map</h5>
+                            <div class="card-body"><canvas id="gridMap"></canvas></div>
+                        </div>
+                    </div>
+                    <div class="col-xl-4 col-lg-12 col-md-12 col-12">
+                        <div class="card">
+                            <h5 class="card-header">Send a test fault</h5>
+                            <div class="card-body">
+                                <div class="form-group">
+                                    <label for="lineSel">Line</label>
+                                    <select id="lineSel" class="form-control"></select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="dur">Duration (ms)</label>
+                                    <input id="dur" type="number" min="1" value="450" class="form-control">
+                                </div>
+                                <button id="sendOne" class="btn btn-primary btn-block">Send fault</button>
+                                <button id="sendThree" class="btn btn-outline-dark btn-block">Send 3 at once on different lines</button>
+                                <div id="msg" class="mt-3 text-muted small"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <h5 class="card-header">Fault log (times in UTC)</h5>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-striped">
+                                        <thead><tr><th>Time (UTC)</th><th>Line</th><th>Duration</th><th>Band</th><th>Severity</th></tr></thead>
+                                        <tbody id="rows"></tbody>
+                                    </table>
+                                </div>
+                                <button id="older" class="btn btn-outline-dark">Load older</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- ============================================================== -->
+            <!-- footer -->
+            <!-- ============================================================== -->
+            <div class="footer">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
+                            Template: Concept admin dashboard by <a href="https://colorlib.com/wp/">Colorlib</a>.
+                        </div>
+                        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- ============================================================== -->
+            <!-- end footer -->
+            <!-- ============================================================== -->
+        </div>
+    </div>
+    <!-- ============================================================== -->
+    <!-- end main wrapper -->
+    <!-- ============================================================== -->
+    <!-- Optional JavaScript -->
+    <script src="assets/vendor/jquery/jquery-3.3.1.min.js"></script>
+    <script src="assets/vendor/bootstrap/js/bootstrap.bundle.js"></script>
+    <script src="assets/vendor/slimscroll/jquery.slimscroll.js"></script>
+    <script src="assets/libs/js/main-js.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+    <script>
+// put your own project values here
+const SUPABASE_URL = 'https://lbmlxzdubepvhwvgajeq.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxibWx4emR1YmVwdmh3dmdhamVxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE1NjAyNTYsImV4cCI6MjEwNzEzNjI1Nn0.BwB0C-KvnCyMBhOCED7k6wGvAX-EBVlpRsjfj9NC94o';
+const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+let stations = [], lines = [], chart;
+let oldest = null;               // cursor: time of the oldest row shown so far
+
+const $ = id => document.getElementById(id);
+const lineName = id => {
+  const l = lines.find(x => x.id === id);
+  if (!l) return 'Line ' + id;
+  const a = stations.find(s => s.id === l.from_substation_id).name;
+  const b = stations.find(s => s.id === l.to_substation_id).name;
+  return `${a} - ${b} (${l.voltage_kv}kV)`;
+};
+
+async function loadRegistry() {
+  const s = await db.from('substations').select('*');
+  const l = await db.from('lines').select('*').order('id');
+  stations = s.data; lines = l.data;
+  $('lineSel').innerHTML = lines.map(x => `<option value="${x.id}">${lineName(x.id)}</option>`).join('');
+}
+
+function drawMap(faultedLineIds = []) {
+  const datasets = lines.map(l => {
+    const a = stations.find(s => s.id === l.from_substation_id);
+    const b = stations.find(s => s.id === l.to_substation_id);
+    const down = faultedLineIds.includes(l.id);
+    return { label: lineName(l.id), showLine: true, pointRadius: 0,
+             borderColor: down ? '#c23b2e' : '#8a97a6', borderWidth: down ? 4 : 2,
+             data: [{ x: a.lng, y: a.lat }, { x: b.lng, y: b.lat }] };
+  });
+  datasets.push({ label: 'Substations', showLine: false, pointRadius: 6, pointBackgroundColor: '#1d2733',
+                  data: stations.map(s => ({ x: s.lng, y: s.lat, name: s.name })) });
+  if (chart) chart.destroy();
+  chart = new Chart($('gridMap'), {
+    type: 'scatter', data: { datasets },
+    options: { plugins: { legend: { display: false },
+                 tooltip: { callbacks: { label: c => c.raw.name || c.dataset.label } } },
+               scales: { x: { title: { display: true, text: 'Longitude' } },
+                         y: { title: { display: true, text: 'Latitude' } } } }
+  });
+}
+
+function rowHtml(r) {
+  return `<tr><td>${r.event_time_utc.replace('T', ' ').slice(0, 23)}</td><td>${lineName(r.line_id)}</td>
+          <td>${r.duration_ms} ms</td><td class="band-${r.band}">${r.band}</td><td>${r.severity_score}</td></tr>`;
+}
+
+// keyset paging: each call only asks for 25 rows older than the last one we have
+async function loadPage(reset) {
+  if (reset) { oldest = null; $('rows').innerHTML = ''; }
+  const args = { p_limit: 25 };
+  if (oldest) args.p_before = oldest;
+  const { data, error } = await db.rpc('recent_faults', args);
+  if (error) { $('msg').textContent = error.message; return; }
+  $('rows').insertAdjacentHTML('beforeend', data.map(rowHtml).join(''));
+  if (data.length) oldest = data[data.length - 1].event_time_utc;
+  if (reset) {
+    // anything in the last 5 minutes with severity above its band weight was part of a cascade
+    const cutoff = Date.now() - 5 * 60 * 1000;
+    const hot = data.filter(r => new Date(r.event_time_utc).getTime() > cutoff);
+    const cascadeNow = hot.some(r => r.severity_score > ({transient:1,short:2,sustained:3,persistent:4})[r.band]);
+    $('status').textContent = cascadeNow ? 'Cascading fault' : 'Grid normal';
+    $('status').className = 'badge ' + (cascadeNow ? 'badge-danger' : 'badge-success');
+    drawMap([...new Set(hot.map(r => r.line_id))]);
+  }
+}
+
+async function send(lineId, ms, when = new Date()) {
+  const { data, error } = await db.rpc('ingest_fault',
+    { p_line_id: lineId, p_event_time: when.toISOString(), p_duration_ms: ms });
+  if (error) $('msg').textContent = error.message;
+  return data;
+}
+
+$('sendOne').onclick = async () => {
+  const r = await send(Number($('lineSel').value), Number($('dur').value));
+  if (r) $('msg').textContent = r.cascading ? `Cascade across ${r.affected_lines} lines` : `Classified as ${r.band}`;
+};
+
+$('sendThree').onclick = async () => {
+  const picks = [...lines].sort(() => Math.random() - 0.5).slice(0, 3);
+  const now = Date.now();
+  for (let i = 0; i < picks.length; i++) {
+    await send(picks[i].id, 200 + i * 700, new Date(now + i * 800));
+  }
+  $('msg').textContent = 'Sent 3 faults within 2 seconds';
+};
+
+$('older').onclick = () => loadPage(false);
+
+db.channel('faults').on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'fault_events' },
+  () => setTimeout(() => loadPage(true), 300)).subscribe();
+
+(async () => { await loadRegistry(); await loadPage(true); })();
+        </script>
+</body>
+ 
+</html>
