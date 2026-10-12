@@ -48,3 +48,6 @@ Add the sources you actually read here (TCN grid operations, fault types, cascad
 - A lock inside the ingest function makes cascade detection safe when faults arrive together.
 - Composite index on (line_id, event_time_utc).
 - The dashboard pages through the log 25 rows at a time and never loads the whole table.
+
+
+Dashboard template: Concept admin dashboard by Colorlib (MIT licence).
